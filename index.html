@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" crossorigin="" href="style.css"> -->
+    <link rel="stylesheet" href="style.css">
+    <title>AND DEFAR FASS NOFLAYE</title>
+    <style type="text/css">
+        :where(html[dir="ltr"]),
+        :where([data-sonner-toaster][dir="ltr"]) {
+            --toast-icon-margin-start: -3px;
+            --toast-icon-margin-end: 4px;
+            --toast-svg-margin-start: -1px;
+            --toast-svg-margin-end: 0px;
+            --toast-button-margin-start: auto;
+            --toast-button-margin-end: 0;
+            --toast-close-button-start: 0;
+            --toast-close-button-end: unset;
+            --toast-close-button-transform: translate(-35%, -35%)
+        }
+
+        :where(html[dir="rtl"]),
+        :where([data-sonner-toaster][dir="rtl"]) {
+            --toast-icon-margin-start: 4px;
+            --toast-icon-margin-end: -3px;
+            --toast-svg-margin-start: 0px;
+            --toast-svg-margin-end: -1px;
+            --toast-button-margin-start: 0;
+            --toast-button-margin-end: auto;
+            --toast-close-button-start: unset;
+            --toast-close-button-end: 0;
+            --toast-close-button-transform: translate(35%, -35%)
+        }
+
+
+        :where([data-sonner-toaster][data-lifted="true"]) {
+            transform: translateY(-10px)
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            :where([data-sonner-toaster][data-lifted="true"]) {
+                transform: none
+            }
+        }
+
+        :where([data-sonner-toaster][data-x-position="right"]) {
+            right: var(--offset-right)
+        }
+
+        :where([data-sonner-toaster][data-x-position="left"]) {
+            left: var(--offset-left)
+        }
+
+        :where([data-sonner-toaster][data-x-position="center"]) {
+            left: 50%;
+            transform: translate(-50%)
+        }
+
+        :where([data-sonner-toaster][data-y-position="top"]) {
+            top: var(--offset-top)
+        }
+
+        :where([data-sonner-toaster][data-y-position="bottom"]) {
+            bottom: var(--offset-bottom)
+        }
+
+        :where([data-sonner-toast]) {
+            --y: translateY(100%);
+            --lift-amount: calc(var(--lift) * var(--gap));
+            z-index: var(--z-index);
+            position: absolute;
+            opacity: 0;
+            transform: var(--y);
+            filter: blur(0);
+            touch-action: none;
+            transition: transform .4s, opacity .4s, height .4s, box-shadow .2s;
+            box-sizing: border-box;
+            outline: none;
+            overflow-wrap: anywhere
+        }
+
+        :where([data-sonner-toast][data-styled="true"]) {
+            padding: 16px;
+            background: var(--normal-bg);
+            border: 1px solid var(--normal-border);
+            color: var(--normal-text);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px #0000001a;
+            width: var(--width);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        :where([data-sonner-toast]:focus-visible) {
+            box-shadow: 0 4px 12px #0000001a, 0 0 0 2px #0003
+        }
+
+        :where([data-sonner-toast][data-y-position="top"]) {
+            top: 0;
+            --y: translateY(-100%);
+            --lift: 1;
+            --lift-amount: calc(1 * var(--gap))
+        }
+
+        :where([data-sonner-toast][data-y-position="bottom"]) {
+            bottom: 0;
+            --y: translateY(100%);
+            --lift: -1;
+            --lift-amount: calc(var(--lift) * var(--gap))
+        }
+
+        :where([data-sonner-toast]) :where([data-description]) {
+            font-weight: 400;
+            line-height: 1.4;
+            color: inherit
+        }
+
+        :where([data-sonner-toast]) :where([data-title]) {
+            font-weight: 500;
+            line-height: 1.5;
+            color: inherit
+        }
+
+        :where([data-sonner-toast]) :where([data-icon]) {
+            display: flex;
+            height: 16px;
+            width: 16px;
+            position: relative;
+            justify-content: flex-start;
+            align-items: center;
+            flex-shrink: 0;
+            margin-left: var(--toast-icon-margin-start);
+            margin-right: var(--toast-icon-margin-end)
+        }
+
+        :where([data-sonner-toast][data-promise="true"]) :where([data-icon])>svg {
+            opacity: 0;
+            transform: scale(.8);
+            transform-origin: center;
+            animation: sonner-fade-in .3s ease forwards
+        }
+
+        :where([data-sonner-toast]) :where([data-icon])>* {
+            flex-shrink: 0
+        }
+
+        :where([data-sonner-toast]) :where([data-icon]) svg {
+            margin-left: var(--toast-svg-margin-start);
+            margin-right: var(--toast-svg-margin-end)
+        }
+
+        :where([data-sonner-toast]) :where([data-content]) {
+            display: flex;
+            flex-direction: column;
+            gap: 2px
+        }
+
+        [data-sonner-toast][data-styled=true] [data-button] {
+            border-radius: 4px;
+            padding-left: 8px;
+            padding-right: 8px;
+            height: 24px;
+            font-size: 12px;
+            color: var(--normal-bg);
+            background: var(--normal-text);
+            margin-left: var(--toast-button-margin-start);
+            margin-right: var(--toast-button-margin-end);
+            border: none;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            transition: opacity .4s, box-shadow .2s
+        }
+
+        :where([data-sonner-toast]) :where([data-button]):focus-visible {
+            box-shadow: 0 0 0 2px #0006
+        }
+
+        :where([data-sonner-toast]) :where([data-button]):first-of-type {
+            margin-left: var(--toast-button-margin-start);
+            margin-right: var(--toast-button-margin-end)
+        }
+
+        :where([data-sonner-toast]) :where([data-cancel]) {
+            color: var(--normal-text);
+            background: rgba(0, 0, 0, .08)
+        }
+
+        :where([data-sonner-toast][data-theme="dark"]) :where([data-cancel]) {
+            background: rgba(255, 255, 255, .3)
+        }
+
+        :where([data-sonner-toast]) :where([data-close-button]) {
+            position: absolute;
+            left: var(--toast-close-button-start);
+            right: var(--toast-close-button-end);
+            top: 0;
+            height: 20px;
+            width: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            color: var(--gray12);
+            border: 1px solid var(--gray4);
+            transform: var(--toast-close-button-transform);
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1;
+            transition: opacity .1s, background .2s, border-color .2s
+        }
+
+        [data-sonner-toast] [data-close-button] {
+            background: var(--gray1)
+        }
+
+        :where([data-sonner-toast]) :where([data-close-button]):focus-visible {
+            box-shadow: 0 4px 12px #0000001a, 0 0 0 2px #0003
+        }
+
+        :where([data-sonner-toast]) :where([data-disabled="true"]) {
+            cursor: not-allowed
+        }
+
+        :where([data-sonner-toast]):hover :where([data-close-button]):hover {
+            background: var(--gray2);
+            border-color: var(--gray5)
+        }
+
+        :where([data-sonner-toast][data-swiping="true"]):before {
+            content: "";
+            position: absolute;
+            left: -50%;
+            right: -50%;
+            height: 100%;
+            z-index: -1
+        }
+
+        :where([data-sonner-toast][data-y-position="top"][data-swiping="true"]):before {
+            bottom: 50%;
+            transform: scaleY(3) translateY(50%)
+        }
+
+        :where([data-sonner-toast][data-y-position="bottom"][data-swiping="true"]):before {
+            top: 50%;
+            transform: scaleY(3) translateY(-50%)
+        }
+
+        :where([data-sonner-toast][data-swiping="false"][data-removed="true"]):before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            transform: scaleY(2)
+        }
+
+        :where([data-sonner-toast]):after {
+            content: "";
+            position: absolute;
+            left: 0;
+            height: calc(var(--gap) + 1px);
+            bottom: 100%;
+            width: 100%
+        }
+
+        :where([data-sonner-toast][data-mounted="true"]) {
+            --y: translateY(0);
+            opacity: 1
+        }
+
+        :where([data-sonner-toast][data-expanded="false"][data-front="false"]) {
+            --scale: var(--toasts-before) * .05 + 1;
+            --y: translateY(calc(var(--lift-amount) * var(--toasts-before))) scale(calc(-1 * var(--scale)));
+            height: var(--front-toast-height)
+        }
+
+        :where([data-sonner-toast])>* {
+            transition: opacity .4s
+        }
+
+        :where([data-sonner-toast][data-expanded="false"][data-front="false"][data-styled="true"])>* {
+            opacity: 0
+        }
+
+        :where([data-sonner-toast][data-visible="false"]) {
+            opacity: 0;
+            pointer-events: none
+        }
+
+        :where([data-sonner-toast][data-mounted="true"][data-expanded="true"]) {
+            --y: translateY(calc(var(--lift) * var(--offset)));
+            height: var(--initial-height)
+        }
+
+        :where([data-sonner-toast][data-removed="true"][data-front="true"][data-swipe-out="false"]) {
+            --y: translateY(calc(var(--lift) * -100%));
+            opacity: 0
+        }
+
+        :where([data-sonner-toast][data-removed="true"][data-front="false"][data-swipe-out="false"][data-expanded="true"]) {
+            --y: translateY(calc(var(--lift) * var(--offset) + var(--lift) * -100%));
+            opacity: 0
+        }
+
+        :where([data-sonner-toast][data-removed="true"][data-front="false"][data-swipe-out="false"][data-expanded="false"]) {
+            --y: translateY(40%);
+            opacity: 0;
+            transition: transform .5s, opacity .2s
+        }
+
+        :where([data-sonner-toast][data-removed="true"][data-front="false"]):before {
+            height: calc(var(--initial-height) + 20%)
+        }
+
+        [data-sonner-toast][data-swiping=true] {
+            transform: var(--y) translateY(var(--swipe-amount-y, 0px)) translate(var(--swipe-amount-x, 0px));
+            transition: none
+        }
+
+        [data-sonner-toast][data-swiped=true] {
+            user-select: none
+        }
+
+        [data-sonner-toast][data-swipe-out=true][data-y-position=bottom],
+        [data-sonner-toast][data-swipe-out=true][data-y-position=top] {
+            animation-duration: .2s;
+            animation-timing-function: ease-out;
+            animation-fill-mode: forwards
+        }
+
+        [data-sonner-toast][data-swipe-out=true][data-swipe-direction=left] {
+            animation-name: swipe-out-left
+        }
+
+        [data-sonner-toast][data-swipe-out=true][data-swipe-direction=right] {
+            animation-name: swipe-out-right
+        }
+
+        [data-sonner-toast][data-swipe-out=true][data-swipe-direction=up] {
+            animation-name: swipe-out-up
+        }
+
+        [data-sonner-toast][data-swipe-out=true][data-swipe-direction=down] {
+            animation-name: swipe-out-down
+        }
+
+        @keyframes swipe-out-left {
+            0% {
+                transform: var(--y) translate(var(--swipe-amount-x));
+                opacity: 1
+            }
+
+            to {
+                transform: var(--y) translate(calc(var(--swipe-amount-x) - 100%));
+                opacity: 0
+            }
+        }
+
+        @keyframes swipe-out-right {
+            0% {
+                transform: var(--y) translate(var(--swipe-amount-x));
+                opacity: 1
+            }
+
+            to {
+                transform: var(--y) translate(calc(var(--swipe-amount-x) + 100%));
+                opacity: 0
+            }
+        }
+
+        @keyframes swipe-out-up {
+            0% {
+                transform: var(--y) translateY(var(--swipe-amount-y));
+                opacity: 1
+            }
+
+            to {
+                transform: var(--y) translateY(calc(var(--swipe-amount-y) - 100%));
+                opacity: 0
+            }
+        }
+
+        @keyframes swipe-out-down {
+            0% {
+                transform: var(--y) translateY(var(--swipe-amount-y));
+                opacity: 1
+            }
+
+            to {
+                transform: var(--y) translateY(calc(var(--swipe-amount-y) + 100%));
+                opacity: 0
+            }
+        }
+
+        @media (max-width: 600px) {
+            [data-sonner-toaster] {
+                position: fixed;
+                right: var(--mobile-offset-right);
+                left: var(--mobile-offset-left);
+                width: 100%
+            }
+
+            [data-sonner-toaster][dir=rtl] {
+                left: calc(var(--mobile-offset-left) * -1)
+            }
+
+            [data-sonner-toaster] [data-sonner-toast] {
+                left: 0;
+                right: 0;
+                width: calc(100% - var(--mobile-offset-left) * 2)
+            }
+
+            [data-sonner-toaster][data-x-position=left] {
+                left: var(--mobile-offset-left)
+            }
+
+            [data-sonner-toaster][data-y-position=bottom] {
+                bottom: var(--mobile-offset-bottom)
+            }
+
+            [data-sonner-toaster][data-y-position=top] {
+                top: var(--mobile-offset-top)
+            }
+
+            [data-sonner-toaster][data-x-position=center] {
+                left: var(--mobile-offset-left);
+                right: var(--mobile-offset-right);
+                transform: none
+            }
+        }
+
+        .sonner-loading-bar:nth-child(11) {
+            animation-delay: -.2s;
+            transform: rotate(300deg) translate(146%)
+        }
+
+        .sonner-loading-bar:nth-child(12) {
+            animation-delay: -.1s;
+            transform: rotate(330deg) translate(146%)
+        }
+
+        @keyframes sonner-fade-in {
+            0% {
+                opacity: 0;
+                transform: scale(.8)
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1)
+            }
+        }
+
+        @keyframes sonner-fade-out {
+            0% {
+                opacity: 1;
+                transform: scale(1)
+            }
+
+            to {
+                opacity: 0;
+                transform: scale(.8)
+            }
+        }
+
+        @keyframes sonner-spin {
+            0% {
+                opacity: 1
+            }
+
+            to {
+                opacity: .15
+            }
+        }
+
+        @media (prefers-reduced-motion) {
+
+            [data-sonner-toast],
+            [data-sonner-toast]>*,
+            .sonner-loading-bar {
+                transition: none !important;
+                animation: none !important
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="min-h-screen bg-background">
+        <header class="w-full bg-background border-b border-border sticky top-0 z-50 shadow-sm">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between h-16"><a
+                        class="flex items-center space-x-4 hover:opacity-80 transition-opacity" href="/">
+                        <div class="w-12 h-12 flex items-center justify-center"><img src="img/logo ADFN.png" alt="ADFN"
+                                class="w-12 h-12 object-contain"></div>
+                        <div>
+                            <h1 class="text-xl font-montserrat font-bold " style="color: rgb(241, 117, 117);">AND DEFAR
+                            </h1>
+                            <p class="text-sm text-muted-foreground" style="color: rgb(241, 117, 117);">FASS NOFLAYE</p>
+                        </div>
+                    </a>
+                    <nav aria-label="Main" data-orientation="horizontal" dir="ltr"
+                        class="relative z-10 max-w-max flex-1 items-center justify-center hidden lg:flex">
+                        <div style="position: relative;">
+                            <ul data-orientation="horizontal"
+                                class="group flex flex-1 list-none items-center justify-center space-x-1" dir="ltr">
+                                <li><button id="radix-:r0:-trigger-radix-:r1:" data-state="closed" aria-expanded="false"
+                                        aria-controls="radix-:r0:-content-radix-:r1:"
+                                        class="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 group text-foreground hover:bg-accent hover:text-accent-foreground hover:font-bold transition-smooth"
+                                        data-radix-collection-item="">Accueil </button></li>
+                                <li><button id="radix-:r0:-trigger-radix-:r2:" data-state="closed" aria-expanded="false"
+                                        aria-controls="radix-:r0:-content-radix-:r2:"
+                                        class="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 group text-foreground hover:bg-accent hover:text-accent-foreground hover:font-bold transition-smooth"
+                                        data-radix-collection-item="">A propos </button></li>
+                                <li><button id="radix-:r0:-trigger-radix-:r3:" data-state="closed" aria-expanded="false"
+                                        aria-controls="radix-:r0:-content-radix-:r3:"
+                                        class="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 group text-foreground hover:bg-accent hover:text-accent-foreground hover:font-bold transition-smooth"
+                                        data-radix-collection-item="">Nos projet</button></li>
+                                <li><button id="radix-:r0:-trigger-radix-:r3:" data-state="closed" aria-expanded="false"
+                                        aria-controls="radix-:r0:-content-radix-:r3:"
+                                        class="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 group text-foreground hover:bg-accent hover:text-accent-foreground hover:font-bold transition-smooth"
+                                        data-radix-collection-item="">Nos actions</button></li>
+                                <li><button id="radix-:r0:-trigger-radix-:r3:" data-state="closed" aria-expanded="false"
+                                        aria-controls="radix-:r0:-content-radix-:r3:"
+                                        class="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 group text-foreground hover:bg-accent hover:text-accent-foreground hover:font-bold transition-smooth"
+                                        data-radix-collection-item="">Contact</button></li>
+                            </ul>
+                        </div>
+                        <div class="absolute left-0 top-full flex justify-center"></div>
+                    </nav>
+
+
+                    <!-- Bouton Participer -->
+                    <div class="flex items-center space-x-4">
+                        <button id="participerBtn"
+                            class="items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm 
+                            font-medium ring-offset-background transition-colors focus-visible:outline-none 
+                            focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
+                            disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none
+                             [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background 
+                             hover:bg-accent hover:text-accent-foreground hover:font-bold h-10 px-4 py-2 hidden sm:flex">
+                            Contribuer au projet ❤️
+                        </button>
+                    </div>
+
+                    <!-- Popup Modal -->
+                    <div id="scanModal" class="fixed inset-0 flex items-center justify-center bg-black/50 hidden">
+                        <div
+                            class="bg-white rounded-xl shadow-xl w-[400px] h-[600px] p-6 relative flex flex-col items-center">
+                            <!-- Bouton Fermer -->
+                            <button id="closeModal"
+                                class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 font-bold text-lg">X</button>
+
+                            <!-- Titre -->
+                            <h3 class="text-2xl font-semibold mb-6 text-center">Merci de soutenir notre projet !</h3>
+                            <br>
+                            <p>Scannez un des QR codes ci-dessous pour contribuer :</p>
+                            <br>
+                            <!-- Zone pour les QR codes -->
+                            <div class="w-full flex justify-around items-center gap-4 flex-wrap">
+                                <!-- QR Wave -->
+                                <div class="flex flex-col items-center">
+                                    <img class="text-center" src="img/Participez.png" style="width: 490px;"
+                                        alt="Wave QR" class="w-64 h-64 border border-gray-300 rounded-md">
+
+                                </div>
+
+                            </div>
+                            <br>
+                            <p>Après le paiement, votre contribution est prise en compte. Merci ! ❤️</p>
+                        </div>
+                    </div>
+
+                    <script>
+                        const participerBtn = document.getElementById('participerBtn');
+                        const scanModal = document.getElementById('scanModal');
+                        const closeModal = document.getElementById('closeModal');
+
+                        // Ouvrir le popup
+                        participerBtn.addEventListener('click', () => {
+                            scanModal.classList.remove('hidden');
+                        });
+
+                        // Fermer le popup
+                        closeModal.addEventListener('click', () => {
+                            scanModal.classList.add('hidden');
+                        });
+
+                        // Fermer en cliquant en dehors de la popup
+                        scanModal.addEventListener('click', (e) => {
+                            if (e.target === scanModal) {
+                                scanModal.classList.add('hidden');
+                            }
+                        });
+                    </script>
+
+
+
+                </div>
+            </div>
+        </header>
+        <main>
+            <section class="relative video-header bg-gradient-subtle overflow-hidden">
+                <!-- Vidéo en arrière-plan -->
+                <video autoplay muted loop playsinline class="bg-video">
+                    <source src="video/WhatsApp Video 2026-02-01 at 19.00.03.mp4">
+                    Votre navigateur ne supporte pas la vidéo.
+                </video>
+
+                <!-- Overlay sombre -->
+                <div class=" video-overlay">
+                </div>
+                <div class="relative container mx-auto px-4 py-16 lg:py-24">
+                    <br><br><br><br>
+                    <div class="max-w-4xl mx-auto text-center">
+                        <h1 class="text-4xl lg:text-6xl font-montserrat font-bold text-white mb-6"> Pour un
+
+                            <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+                                style="color: white;">quartier
+                                propre,
+                                sain</span> et éclairé
+                        </h1>
+                        <p class="text-xl lg:text-2xl text-white mb-8 max-w-3xl mx-auto"> Initiative
+                            communautaire d’assainissement, d’éclairage et de développement
+                            à Fass Noflaye – Rufisque.</p>
+                        <br><br>
+                        <div class="grid grid-cols-1 items-center md:grid-cols-3 gap-4 max-w-4xl  mx-auto">
+                            <button class="inline-flex items-center justify-center gap-2 whitespace-focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0  rounded-md h-auto py-4 px-6 gradient-hero shadow-hero hover:shadow-lg transition-smooth transition-all duration-300 
+hover:bg-red-700 hover:text-white hover:shadow-lg hover:scale-105">
+                                <div class="text-left">
+                                    <div class="font-semibold text-red-500">Decouvrir le projet</div>
+                                </div>
+                            </button>
+                            <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium  transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0  rounded-md h-auto py-4 px-6 gradient-hero shadow-hero hover:shadow-lg transition-smooth transition-all duration-300 
+hover:bg-red-700 hover:text-white hover:shadow-lg hover:scale-105">
+                                <div class="text-left">
+                                    <div class="font-semibold text-red-500">Contribuer au projet</div>
+
+                                </div>
+                            </button>
+                            <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0  rounded-md h-auto py-4 px-6 gradient-hero  shadow-hero hover:shadow-lg transition-smooth transition-all duration-300 
+hover:bg-red-700 hover:text-white hover:shadow-lg hover:scale-105">
+                                <div class="text-left">
+                                    <div class="font-semibold text-red-500">Video de presentation du projet</div>
+
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="py-16 relative overflow-hidden bg-gradient-to-br from-background via-secondary/10 to-accent/5">
+
+                <div class="container mx-auto px-4 relative z-10 mb-16">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                            <div class="relative">
+
+                                <div class="relative bg-gradient-to-br ">
+
+                                    <div class="relative p-6">
+                                        <div class="relative overflow-hidden rounded-2xl">
+                                            <img src="img/Unité et joie à Fass Noflaye.png" class=" img-presentation">
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="space-y-8">
+                                <div>
+                                    <h2
+                                        class="text-3xl lg:text-4xl font-montserrat font-bold text-foreground mb-6 leading-tight">
+                                        À propos du
+                                        projet</h2>
+                                </div>
+                                <div class="space-y-6 text-muted-foreground leading-relaxed">
+                                    <p class="text-xl"><span class="text-foreground font-semibold">Un projet citoyen
+                                            pour Fass Noflaye</p>
+                                    <p class="text-lg">Nous sommes une initiative citoyenne visant à améliorer le cadre
+                                        de vie du quartier à travers des actions d’assainissement, d’éclairage public,
+                                        de pavage des routes et de sensibilisation à la santé et à l’éducation. Porté
+                                        par les habitants, le projet repose sur la solidarité, l’engagement
+                                        communautaire et la participation volontaire de tous..</p>
+                                    <p class="text-lg"></p>
+                                    <p
+                                        class="text-lg text-foreground font-medium bg-primary/5 p-4 rounded-lg border-l-4 border-primary">
+                                        Il est porté par les jeunes, les leaders communautaires et les
+                                        habitants du
+                                        quartier,
+                                        avec le soutien de partenaires locaux..</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+            <section class="py-16 bg-background relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-1/4 h-full opacity-5">
+                    <!-- <img
+                        src="/assets/dakar-landmarks-CrXy3RpD.jpg" alt="Monuments de Dakar"
+                        class="w-full h-full object-cover">-->
+                </div>
+                <div class="container mx-auto px-4 relative">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl lg:text-4xl font-montserrat font-bold text-foreground mb-4">Nos
+                            principales
+                            actions
+                        </h2>
+                        <p class="text-xl text-muted-foreground max-w-2xl mx-auto">Découvrez tous les actions qu'on
+                            deroule au sein du quartier</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div
+                            class="rounded-lg border bg-card text-card-foreground shadow-sm shadow-card hover:shadow-lg transition-smooth cursor-pointer group">
+                            <div class="flex flex-col space-y-1.5 p-6 pb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div
+                                        class="p-3 rounded-lg bg-secondary group-hover:bg-primary group-hover:text-primary-foreground transition-smooth">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-users h-6 w-6 text-primary group-hover:text-primary-foreground">
+                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        </svg>
+                                    </div> <br>
+                                    <h3 class="font-semibold tracking-tight text-lg font-montserrat">Mobilisation
+                                        citoyenne</h3>
+                                </div>
+                            </div>
+                            <div class="p-6 pt-0">
+                                <p class="text-muted-foreground text-base">Sensibilisation et participation active
+                                    des
+                                    habitants.</p>
+                            </div>
+                        </div>
+                        <div
+                            class="rounded-lg border bg-card text-card-foreground shadow-sm shadow-card hover:shadow-lg transition-smooth cursor-pointer group">
+                            <div class="flex flex-col space-y-1.5 p-6 pb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div
+                                        class="p-3 rounded-lg bg-secondary group-hover:bg-primary group-hover:text-primary-foreground transition-smooth">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-building2 h-6 w-6 text-senegal-yellow group-hover:text-primary-foreground">
+                                            <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path>
+                                            <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path>
+                                            <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path>
+                                            <path d="M10 6h4"></path>
+                                            <path d="M10 10h4"></path>
+                                            <path d="M10 14h4"></path>
+                                            <path d="M10 18h4"></path>
+                                        </svg>
+                                    </div>
+                                    <h3 class="font-semibold tracking-tight text-lg font-montserrat">Assainissement
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="p-6 pt-0">
+                                <p class="text-muted-foreground text-base">Nettoyage des rues, curage des caniveaux
+                                    et
+                                    gestion des déchets.</p>
+                            </div>
+                        </div>
+                        <div
+                            class="rounded-lg border bg-card text-card-foreground shadow-sm shadow-card hover:shadow-lg transition-smooth cursor-pointer group">
+                            <div class="flex flex-col space-y-1.5 p-6 pb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div
+                                        class="p-3 rounded-lg bg-secondary group-hover:bg-primary group-hover:text-primary-foreground transition-smooth">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-graduation-cap h-6 w-6 text-primary group-hover:text-primary-foreground">
+                                            <path
+                                                d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z">
+                                            </path>
+                                            <path d="M22 10v6"></path>
+                                            <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path>
+                                        </svg>
+                                    </div>
+                                    <h3 class="font-semibold tracking-tight text-lg font-montserrat">Éducation &
+                                        citoyenneté</h3>
+                                </div>
+                            </div>
+                            <div class="p-6 pt-0">
+                                <p class="text-muted-foreground text-base"> Activités éducatives et campagnes de
+                                    sensibilisation pour renforcer le
+                                    civisme et
+                                    l’engagement citoyen.</p>
+                            </div>
+                        </div>
+                        <div
+                            class="rounded-lg border bg-card text-card-foreground shadow-sm shadow-card hover:shadow-lg transition-smooth cursor-pointer group">
+                            <div class="flex flex-col space-y-1.5 p-6 pb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div
+                                        class="p-3 rounded-lg bg-secondary group-hover:bg-primary group-hover:text-primary-foreground transition-smooth">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-heart h-6 w-6 text-senegal-red group-hover:text-primary-foreground">
+                                            <path
+                                                d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <h3 class="font-semibold tracking-tight text-lg font-montserrat">Sensibilisation
+                                        santé &amp;
+                                        Social
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="p-6 pt-0">
+                                <p class="text-muted-foreground text-base"> Organisation de journées de
+                                    sensibilisation
+                                    sur l’hygiène, la prévention et la santé
+                                    communautaire.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="rounded-lg border bg-card text-card-foreground shadow-sm shadow-card hover:shadow-lg transition-smooth cursor-pointer group">
+                            <div class="flex flex-col space-y-1.5 p-6 pb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div
+                                        class="p-3 rounded-lg bg-secondary group-hover:bg-primary group-hover:text-primary-foreground transition-smooth">
+                                        <!-- Icône Éclairage public -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" class="text-white">
+
+                                            <path d="M12 2 V22" />
+                                            <path d="M12 4 H18" />
+                                            <path d="M18 4 C19.7 4 21 5.3 21 7 V8 H15 V7 C15 5.3 16.3 4 18 4 Z" />
+                                            <path d="M16 10 L15 13" />
+                                            <path d="M18 10 V14" />
+                                            <path d="M20 10 L21 13" />
+                                        </svg>
+                                    </div>
+                                    <h3 class="font-semibold tracking-tight text-lg font-montserrat">Éclairage
+                                        public
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="p-6 pt-0">
+                                <p class="text-muted-foreground text-base">Installation et maintenance de
+                                    lampadaires
+                                    pour plus de sécurité.</p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="rounded-lg border bg-card text-card-foreground shadow-sm shadow-card hover:shadow-lg transition-smooth cursor-pointer group">
+                            <div class="flex flex-col space-y-1.5 p-6 pb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div
+                                        class="p-3 rounded-lg bg-secondary group-hover:bg-primary group-hover:text-primary-foreground transition-smooth">
+                                        <!-- Icône Pavage de route -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-primary">
+
+                                            <!-- Bord gauche -->
+                                            <path d="M6 2 L3 22" />
+
+                                            <!-- Bord droit -->
+                                            <path d="M18 2 L21 22" />
+
+                                            <!-- Marquage central -->
+                                            <path d="M12 2 V5" />
+                                            <path d="M12 8 V11" />
+                                            <path d="M12 14 V17" />
+                                            <path d="M12 20 V22" />
+                                        </svg>
+
+                                    </div>
+                                    <h3 class="font-semibold tracking-tight text-lg font-montserrat">Pavage des
+                                        routes
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="p-6 pt-0">
+                                <p class="text-muted-foreground text-base">
+                                    Aménagement et pavage des voies pour améliorer la mobilité et réduire la
+                                    poussière
+                                    et la
+                                    boue.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <section class="py-16 bg-background">
+                    <div class="container mx-auto px-4">
+                        <div class="text-center mb-12">
+                            <h2 class="text-3xl lg:text-4xl font-montserrat font-bold text-foreground mb-4">Fass en
+                                Chiffres</h2>
+                            <p class="text-xl text-muted-foreground">Découvrez les données clés de notre quartier
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div
+                                class="rounded-lg border bg-card text-card-foreground shadow-sm text-center shadow-card hover:shadow-lg transition-smooth">
+                                <div class="p-6 pt-6">
+                                    <div
+                                        class="text-4xl lg:text-5xl font-montserrat font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-2">
+                                        2000</div>
+                                    <div class="text-xl font-montserrat font-semibold text-foreground mb-1">
+                                        Habitants
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-lg border bg-card text-card-foreground shadow-sm text-center shadow-card hover:shadow-lg transition-smooth">
+                                <div class="p-6 pt-6">
+                                    <div
+                                        class="text-4xl lg:text-5xl font-montserrat font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-2">
+                                        100km²</div>
+                                    <div class="text-xl font-montserrat font-semibold text-foreground mb-1">
+                                        Superficie
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-lg border bg-card text-card-foreground shadow-sm text-center shadow-card hover:shadow-lg transition-smooth">
+                                <div class="p-6 pt-6">
+                                    <div
+                                        class="text-4xl lg:text-5xl font-montserrat font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-2">
+                                        10</div>
+                                    <div class="text-xl font-montserrat font-semibold text-foreground mb-1">Projets
+                                        communautaires réalisés
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-lg border bg-card text-card-foreground shadow-sm text-center shadow-card hover:shadow-lg transition-smooth">
+                                <div class="p-6 pt-6">
+                                    <div
+                                        class="text-4xl lg:text-5xl font-montserrat font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-2">
+                                        5</div>
+                                    <div class="text-xl font-montserrat font-semibold text-foreground mb-1">Projets
+                                        en
+                                        cours
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+            <section class="py-16 bg-gradient-to-r from-primary to-primary-foreground text-white">
+                <div class="container mx-auto px-4 text-center">
+                    <h2 class="text-3xl font-bold mb-4">Ensemble, construisons un quartier meilleur</h2>
+
+                    <p class="text-white-50 mb-0">Ce projet est l’affaire de tous. Par un don, du matériel, un conseil
+                        ou une mise en relation, vous pouvez faire la différence. Ensemble, améliorons durablement notre
+                        quartier. En participant, vous contribuez directement à offrir un cadre de vie plus digne aux
+                        générations futures</p> <br>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button id="participerBtn"
+                            class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0  hover:font-bold h-11 rounded-md px-8  text-primary "
+                            href="/espace-citoyen/login">Contribuer a ce projet
+                        </button>
+                    </div>
+                </div>
+
+
+
+
+
+            </section>
+            <section
+                class="py-16 relative overflow-hidden bg-gradient-to-br from-background via-secondary/10 to-accent/5">
+
+                <div class="container mx-auto px-4 relative z-10">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl lg:text-4xl font-montserrat font-bold text-foreground mb-4">Fass Noflaye en
+                            Images
+                        </h2>
+
+                    </div>
+                    <div class="max-w-6xl mx-auto mb-8">
+                        <div
+                            class="rounded-lg border text-card-foreground shadow-sm overflow-hidden shadow-elegant hover:shadow-glow transition-all duration-500 bg-background/80 backdrop-blur-sm border-border/30">
+
+                            <div class="relative">
+                                <!-- VIDEO -->
+                                <div class="relative h-[400px] lg:h-[500px] overflow-hidden">
+                                    <video class="w-full h-full object-cover" controls>
+                                        <source src="video/WhatsApp Video 2026-02-01 at 19.00.03.mp4" type="video/mp4">
+                                        Votre navigateur ne supporte pas la vidéo.
+                                    </video>
+                                    <button id="soundBtn"
+                                        class="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-2 rounded-md z-50">
+                                        🔇
+                                    </button>
+
+
+                                </div>
+
+                                <!-- TEXTE -->
+                                <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
+                                    <div class="flex items-center text-sm mb-2 opacity-90">
+                                        📍 Fass
+                                    </div>
+                                    <h3 class="text-2xl lg:text-3xl font-montserrat font-bold mb-2">
+                                        Video de presentation du projet
+                                    </h3>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- <div class="container mx-auto px-4 relative z-10">
+                <div class="max-w-6xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl lg:text-4xl font-montserrat font-bold text-foreground mb-4">Membres de
+                            l'équipe</h2>
+                        <p class="text-xl text-muted-foreground">Une équipe dévouée au service des populations
+
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div
+                            class="rounded-lg border text-card-foreground shadow-sm overflow-hidden shadow-elegant hover:shadow-glow transition-all duration-300 hover:-translate-y-1 bg-background/80 backdrop-blur-sm border-border/30">
+                            <div class="relative"><img src="img/respon1.png" alt="Ngoné MBENGUE"
+                                    class="w-full h-48 object-cover">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent">
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-montserrat font-bold text-foreground mb-1">SANGUE LEYE
+                                </h3>
+                                <p class="text-sm text-primary font-semibold mb-2">PRESIDENT
+                                </p>
+
+                            </div>
+                        </div>
+                        <div
+                            class="rounded-lg border text-card-foreground shadow-sm overflow-hidden shadow-elegant hover:shadow-glow transition-all duration-300 hover:-translate-y-1 bg-background/80 backdrop-blur-sm border-border/30">
+                            <div class="relative"><img src="img/respons2.png" alt="Mamadou DIOP"
+                                    class="w-full h-48 object-cover">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent">
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-montserrat font-bold text-foreground mb-1">ADAMA DIOP</h3>
+                                <p class="text-sm text-primary font-semibold mb-2">Vice president</p>
+
+                            </div>
+                        </div>
+                        <div
+                            class="rounded-lg border text-card-foreground shadow-sm overflow-hidden shadow-elegant hover:shadow-glow transition-all duration-300 hover:-translate-y-1 bg-background/80 backdrop-blur-sm border-border/30">
+                            <div class="relative"><img src="img/respons3.png" alt="Ousmane NDIAYE"
+                                    class="w-full h-48 object-cover">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent">
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-montserrat font-bold text-foreground mb-1">Abou DIOUF
+                                </h3>
+                                <p class="text-sm text-primary font-semibold mb-2">Secretaire</p>
+
+                            </div>
+                        </div>
+                        <div
+                            class="rounded-lg border text-card-foreground shadow-sm overflow-hidden shadow-elegant hover:shadow-glow transition-all duration-300 hover:-translate-y-1 bg-background/80 backdrop-blur-sm border-border/30">
+                            <div class="relative"><img src="img/respons4.png" alt="Aminata KANE"
+                                    class="w-full h-48 object-cover">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent">
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-montserrat font-bold text-foreground mb-1">Aminata DIOP</h3>
+                                <p class="text-sm text-primary font-semibold mb-2">directeur
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div> -->
+            <section class="py-16 bg-secondary/30">
+                <div class="container mx-auto px-4">
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-12">
+                        <div>
+                            <h2 class="text-3xl lg:text-4xl font-montserrat font-bold text-foreground mb-4">
+                                Nos projets
+                            </h2>
+                            <p class="text-xl text-muted-foreground">Restez informé des dernières nouveau projet du
+                                quartier
+                            </p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div
+                            class="rounded-lg border bg-card text-card-foreground shadow-sm shadow-card hover:shadow-lg transition-smooth cursor-pointer overflow-hidden">
+                            <div class="relative h-48 overflow-hidden"><img
+                                    src="img/ChatGPT Image 1 févr. 2026, 13_05_16.png" alt=""
+                                    class="w-full h-full object-cover transition-smooth group-hover:scale-105">
+
+                            </div>
+                            <div class="flex flex-col space-y-1.5 p-6">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center text-sm text-muted-foreground"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-calendar h-4 w-4 mr-1">
+                                            <path d="M8 2v4"></path>
+                                            <path d="M16 2v4"></path>
+                                            <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                                            <path d="M3 10h18"></path>
+                                        </svg>15 Janvier 2024</div>
+                                </div>
+                                <h3 class="font-semibold tracking-tight text-xl font-montserrat line-clamp-2">
+                                    Ceremonie officiel de lancement des activités de l'association And defar fass
+                                    noflaye
+                                </h3>
+                            </div>
+                            <div class="p-6 pt-0">
+                                <p class="text-muted-foreground text-base line-clamp-3 mb-4">La cérémonie officielle de
+                                    lancement des activités de l’Association And Défar Fass Noflaye a réuni les acteurs
+                                    locaux et les populations du quartier autour d’une vision commune de développement,
+                                    de solidarité et d’engagement citoyen. Cet événement marque le point de départ des
+                                    actions de l’association au service du bien-être et de l’amélioration du cadre de
+                                    vie à Fass Noflaye.</p>
+                            </div>
+                        </div>
+                        <div
+                            class="rounded-lg border bg-card text-card-foreground shadow-sm shadow-card hover:shadow-lg transition-smooth cursor-pointer overflow-hidden">
+                            <div class="relative h-48 overflow-hidden"><img
+                                    src="img/ChatGPT Image 1 févr. 2026, 12_52_51.png" alt=""
+                                    class="w-full h-full object-cover transition-smooth group-hover:scale-105">
+
+                            </div>
+                            <div class="flex flex-col space-y-1.5 p-6">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center text-sm text-muted-foreground"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-calendar h-4 w-4 mr-1">
+                                            <path d="M8 2v4"></path>
+                                            <path d="M16 2v4"></path>
+                                            <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                                            <path d="M3 10h18"></path>
+                                        </svg>12 Janvier 2024</div>
+                                </div>
+                                <h3 class="font-semibold tracking-tight text-xl font-montserrat line-clamp-2">
+                                    Lancement
+                                    du nouveau programme de pavage des deux deux mosqué de fass</h3>
+                            </div>
+                            <div class="p-6 pt-0">
+                                <p class="text-muted-foreground text-base line-clamp-3 mb-4">L’Association And Défar
+                                    Fass Noflaye a procédé au lancement officiel du nouveau programme de pavage des deux
+                                    mosquées du quartier de Fass. Cette initiative vise à améliorer l’accessibilité, la
+                                    salubrité et la sécurité des lieux de culte, tout en offrant un cadre plus propre et
+                                    plus digne aux fidèles..
+                                </p>
+
+                            </div>
+                        </div>
+                        <div
+                            class="rounded-lg border bg-card text-card-foreground shadow-sm shadow-card hover:shadow-lg transition-smooth cursor-pointer overflow-hidden">
+                            <div class="relative h-48 overflow-hidden"><img src="img/sonaged.jpeg"
+                                    alt="Festival culturel de Dakar 2024"
+                                    class="w-full h-full object-cover transition-smooth group-hover:scale-105">
+
+                            </div>
+                            <div class="flex flex-col space-y-1.5 p-6">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center text-sm text-muted-foreground"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-calendar h-4 w-4 mr-1">
+                                            <path d="M8 2v4"></path>
+                                            <path d="M16 2v4"></path>
+                                            <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                                            <path d="M3 10h18"></path>
+                                        </svg>03 Janvier 2025</div>
+                                </div>
+                                <h3 class="font-semibold tracking-tight text-xl font-montserrat line-clamp-2">
+                                    Inauguration du PRN de la SONAGED</h3>
+                            </div>
+                            <div class="p-6 pt-0">
+                                <p class="text-muted-foreground text-base line-clamp-3 mb-4">Ce poste de regroupement
+                                    permettra d’organiser efficacement la collecte des déchets et de faciliter le
+                                    travail des services d’assainissement, tout en sensibilisant les habitants à
+                                    l’importance du respect de l’environnement et de la propreté urbaine. Cette
+                                    réalisation s’inscrit dans une dynamique de collaboration entre les autorités, les
+                                    partenaires et les acteurs communautaires engagés pour un quartier plus propre et
+                                    mieux organisé.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer class="footer text-red">
+            <div class="container mx-auto px-4 py-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 flex items-center justify-center"><img src="img/logo ADFN.png"
+                                    alt="Logo Ville de Dakar" class="w-12 h-12 object-contain"></div>
+                            <div>
+                                <h3 class="text-lg font-montserrat font-bold">AND DEFAR</h3>
+                                <p class="text-sm opacity-80">FASS NOFLAYE</p>
+                            </div>
+                        </div>
+                        <p class="text-sm opacity-80 leading-relaxed">Ce projet vise à améliorer les conditions de vie
+                            des habitants du
+                            quartier Fass Noflaye
+                            à travers des actions d’assainissement, de nettoyage et d’installation d’éclairage
+                            public.</p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-montserrat font-semibold mb-4">Liens Rapides</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="#" class="opacity-80 hover:opacity-100 transition-smooth">Accueil</a></li>
+                            <li><a href="#" class="opacity-80 hover:opacity-100 transition-smooth">A propos</a></li>
+                            <li><a href="#" class="opacity-80 hover:opacity-100 transition-smooth">Nos projets</a>
+                            </li>
+                            <li><a href="#" class="opacity-80 hover:opacity-100 transition-smooth">Nos actions</a>
+                            </li>
+                            <li><a href="#" class="opacity-80 hover:opacity-100 transition-smooth">Contact</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-montserrat font-semibold mb-4">Contact</h4>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex items-start space-x-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-map-pin h-4 w-4 mt-0.5 opacity-80">
+                                    <path
+                                        d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0">
+                                    </path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg><span class="opacity-80">Fass noflaye Rufisque <br>Dakar,
+                                    Sénégal</span></div>
+                            <div class="flex items-center space-x-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-phone h-4 w-4 opacity-80">
+                                    <path
+                                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                                    </path>
+                                </svg><span class="opacity-80">+221 77 175 25 82</span></div>
+                            <div class="flex items-center space-x-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-mail h-4 w-4 opacity-80">
+                                    <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                                </svg><span class="opacity-80">contact@anddefarfassnoflaye.sn</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-montserrat font-semibold mb-4">Suivez-nous</h4>
+                        <div class="flex space-x-3"><button
+                                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:text-accent-foreground hover:font-bold h-10 w-10 bg-white/10 hover:bg-white/20"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-facebook h-4 w-4">
+                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z">
+                                    </path>
+                                </svg></button><button
+                                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:text-accent-foreground hover:font-bold h-10 w-10 bg-white/10 hover:bg-white/20"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-twitter h-4 w-4">
+                                    <path
+                                        d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z">
+                                    </path>
+                                </svg></button><button
+                                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:text-accent-foreground hover:font-bold h-10 w-10 bg-white/10 hover:bg-white/20"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-instagram h-4 w-4">
+                                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                                </svg></button><button
+                                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:text-accent-foreground hover:font-bold h-10 w-10 bg-white/10 hover:bg-white/20"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-youtube h-4 w-4">
+                                    <path
+                                        d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17">
+                                    </path>
+                                    <path d="m10 15 5-3-5-3z"></path>
+                                </svg></button></div>
+                        <p class="text-xs opacity-60 mt-4">Restez connecté pour ne rien manquer de l'actualité
+                            fassois
+                        </p>
+                    </div>
+                </div>
+                <div data-orientation="horizontal" role="none" class="shrink-0 h-[1px] w-full my-8 bg-white/20">
+                </div>
+                <hr class="ligne-footer">
+                <br>
+                <div class="flex flex-col md:flex-row justify-between items-center text-sm">
+                    <div class="opacity-60">© 2025 And defar fass noflaye Tous droits réservés.</div>
+                    <div class="flex space-x-6 mt-4 md:mt-0">
+                        <p>Concepteur <a href="https://babacar97.github.io/My-portofolio/" target="_blank"
+                                class="opacity-60 hover:opacity-100 transition-smooth baabs">Babacar
+                                Ndiaye</a></p>
+
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+</body>
+
+</html>
